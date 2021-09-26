@@ -1,6 +1,3 @@
-"""
-Docstring debouncer module
-"""
 import supervisor
 from micropython import const
 
@@ -30,13 +27,8 @@ class HoldTime:
 
 
 class Debouncer:
-    """
-    Docstring Debouncer class
-    """
-
-    def __init__(self, keys, hold_time=1.0, double_delay=0):
+    def __init__(self, keys, hold_time=1.0):
         self.keypad = keys
-        self.double_delay = double_delay
         self.timestamp = 0
         self.values = [
             [False, False, False, 0, 0, 0, False, hold_time]

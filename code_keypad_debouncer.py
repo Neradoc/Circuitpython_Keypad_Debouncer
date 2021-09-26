@@ -24,6 +24,9 @@ while True:
 
     held = db.held()
     if len(held):
-        print("helds", repr(held))
+        print("helds", [
+            (pos, db.current_duration(pos) / 1000)
+            for pos in held
+        ])
 
     db.hold_time[4] = 5.0
