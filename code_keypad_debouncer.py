@@ -14,9 +14,10 @@ while True:
     if db.rose(0):
         print("Pressed Key 0")
     if db.fell(0):
-        print(f"Held Key 0 for {db.last_duration(0) / 1000}s")
+        print(f"Held Key 0 for {db.last_duration(0):f}s")
     if db.held(0):
-        print("Holding long Key 0")
+        dur = db.current_duration(0)
+        print(f"Holding long Key 0 ({dur:f})")
 
     roses = db.rose()
     if len(roses):

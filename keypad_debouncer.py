@@ -55,10 +55,10 @@ class Debouncer:
             self.values[pos][HELD] = False
 
     def current_duration(self, pos):
-        return self.timestamp - self.values[pos][TIME]
+        return (self.timestamp - self.values[pos][TIME]) / 1000
 
     def last_duration(self, pos):
-        return self.timestamp - self.values[pos][TIME - 1]
+        return (self.timestamp - self.values[pos][TIME - 1]) / 1000
 
     def rose(self, pos=None):
         if pos is None:
