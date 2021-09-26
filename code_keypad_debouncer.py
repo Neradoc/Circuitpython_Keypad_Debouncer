@@ -25,3 +25,5 @@ while True:
     held = db.held()
     if len(held):
         print("helds", repr(held))
+
+    db.hold_time[4] = 5.0
