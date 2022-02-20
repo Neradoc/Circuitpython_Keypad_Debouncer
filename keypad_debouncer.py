@@ -1,14 +1,14 @@
 import supervisor
 from micropython import const
 
-STATE = const(0)
-ROSE = const(1)
-FELL = const(2)
-# TIME-2 = const(3)
-# TIME-1 = const(4)
-TIME = const(5)
-HELD = const(6)
-HOLD_TIME = const(7)
+_STATE = const(0)
+_ROSE = const(1)
+_FELL = const(2)
+# _TIME-2 = const(3)
+# _TIME-1 = const(4)
+_TIME = const(5)
+_HELD = const(6)
+_HOLD_TIME = const(7)
 
 
 class HoldTime:
@@ -16,14 +16,14 @@ class HoldTime:
         self.deb = deb
 
     def __getitem__(self, pos):
-        return self.deb.values[pos][HOLD_TIME]
+        return self.deb.values[pos][_HOLD_TIME]
 
     def __setitem__(self, pos, val):
-        self.deb.values[pos][HOLD_TIME] = val
+        self.deb.values[pos][_HOLD_TIME] = val
 
     def set(self, val):
         for pos in range(len(self.deb.values)):
-            self.deb.values[pos][HOLD_TIME] = val
+            self.deb.values[pos][_HOLD_TIME] = val
 
 
 class Debouncer:
@@ -38,59 +38,59 @@ class Debouncer:
 
     def update(self):
         for pos in range(len(self.values)):
-            self.values[pos][ROSE] = False
-            self.values[pos][FELL] = False
+            self.values[pos][_ROSE] = False
+            self.values[pos][_FELL] = False
         events = []
         while event := self.keypad.events.get():
             events.append(event)
         self.timestamp = supervisor.ticks_ms()
         for event in events:
             pos = event.key_number
-            self.values[pos][STATE] = event.pressed
-            self.values[pos][ROSE] = event.pressed
-            self.values[pos][FELL] = event.released
-            self.values[pos][TIME - 2] = self.values[pos][TIME - 1]
-            self.values[pos][TIME - 1] = self.values[pos][TIME]
-            self.values[pos][TIME] = event.timestamp
-            self.values[pos][HELD] = False
+            self.values[pos][_STATE] = event.pressed
+            self.values[pos][_ROSE] = event.pressed
+            self.values[pos][_FELL] = event.released
+            self.values[pos][_TIME - 2] = self.values[pos][_TIME - 1]
+            self.values[pos][_TIME - 1] = self.values[pos][_TIME]
+            self.values[pos][_TIME] = event.timestamp
+            self.values[pos][_HELD] = False
 
     def current_duration(self, pos):
-        return (self.timestamp - self.values[pos][TIME]) / 1000
+        return (self.timestamp - self.values[pos][_TIME]) / 1000
 
     def last_duration(self, pos):
-        return (self.timestamp - self.values[pos][TIME - 1]) / 1000
+        return (self.timestamp - self.values[pos][_TIME - 1]) / 1000
 
     def rose(self, pos=None):
         if pos is None:
-            return [pp for pp, val in enumerate(self.values) if val[ROSE]]
+            return [pp for pp, val in enumerate(self.values) if val[_ROSE]]
         else:
-            return self.values[pos][ROSE]
+            return self.values[pos][_ROSE]
 
     def fell(self, pos=None):
         if pos is None:
-            return [pp for pp, val in enumerate(self.values) if val[FELL]]
+            return [pp for pp, val in enumerate(self.values) if val[_FELL]]
         else:
-            return self.values[pos][FELL]
+            return self.values[pos][_FELL]
 
     def pressed(self, pos=None):
         if pos is None:
-            return [pp for pp, val in enumerate(self.values) if val[STATE]]
+            return [pp for pp, val in enumerate(self.values) if val[_STATE]]
         else:
-            return self.values[pos][STATE]
+            return self.values[pos][_STATE]
 
     def set_hold_times(self, value):
         for pos in range(len(self.values)):
-            self.values[pos][HOLD_TIME] = value
+            self.values[pos][_HOLD_TIME] = value
 
     def held(self, pos=None):
         if pos is None:
             return [pp for pp, val in enumerate(self.values) if self.held(pp)]
-        if self.values[pos][HELD]:
+        if self.values[pos][_HELD]:
             return False
-        duration = int(self.values[pos][HOLD_TIME] * 1000)
-        dt = self.timestamp - self.values[pos][TIME]
-        if self.values[pos][STATE] and dt >= duration:
-            self.values[pos][HELD] = True
+        duration = int(self.values[pos][_HOLD_TIME] * 1000)
+        dt = self.timestamp - self.values[pos][_TIME]
+        if self.values[pos][_STATE] and dt >= duration:
+            self.values[pos][_HELD] = True
             return True
         return False
 
